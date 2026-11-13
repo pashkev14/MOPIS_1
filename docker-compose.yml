@@ -1,0 +1,19 @@
+services:
+  opencode:
+    build:
+      context: ./.docker/opencode
+      dockerfile: Dockerfile
+    container_name: opencode-java25
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./:/workspace
+      - ./.docker/opencode/opencode.json:/home/coder/.config/opencode/opencode.json:ro
+      - maven_cache:/home/coder/.m2
+      - opencode_data:/home/coder/.local/share/opencode
+    environment:
+      - ROUTERAI_API_KEY=${ROUTERAI_API_KEY}
+
+volumes:
+  maven_cache:
+  opencode_data:

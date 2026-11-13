@@ -1,0 +1,16 @@
+# OpenCode & AI
+.opencode/
+.env
+
+# Java
+target/
+build/
+.gradle/
+*.class
+*.jar
+
+# IDE & OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
