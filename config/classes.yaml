@@ -1,0 +1,45 @@
+# Наследование параметров: у класса не более одного родителя (parent).
+# Собственный параметр с тем же id ПОЛНОСТЬЮ заменяет описание родителя (тип обязан совпадать).
+# default подставляется, только если поле пропущено в объекте; явный null сохраняется.
+classes:
+  - id: item
+    title: Изделие
+    parameters:
+      - id: designation
+        title: Обозначение
+        type: string
+      - id: mass
+        title: Масса, кг
+        type: decimal
+        min: 0.001
+        max: 1000
+        default: 1.0
+
+  - id: component
+    title: Комплектующее изделие
+    parent: item
+    parameters:
+      - id: mass # переопределение: другой диапазон и другое значение по умолчанию
+        title: Масса, кг
+        type: decimal
+        min: 0.001
+        max: 250
+        default: 0.5
+      - id: is_produced
+        title: Продукция серийно производится
+        type: string
+        default: "no"
+      - id: suppliers_count
+        title: Число возможных поставщиков
+        type: integer
+        min: 0
+        max: 20
+        default: 0
+      - id: supplier_approved
+        title: Поставщик согласован
+        type: string
+        default: "no"
+      - id: tech_process_approved
+        title: Технология изготовления согласована
+        type: string
+        default: "no"

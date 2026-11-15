@@ -1,0 +1,28 @@
+roles:
+  - id: developer
+    title: Разработчик
+  - id: kb
+    title: Конструкторское бюро
+  - id: to
+    title: Технологический отдел
+  - id: omts
+    title: Отдел материально-технического снабжения
+  - id: chief_designer
+    title: Главный конструктор
+
+users:
+  - id: ivanov
+    name: Иванов И. И.
+    roles: [developer]
+  - id: petrov
+    name: Петров П. П.
+    roles: [kb]
+  - id: sokolova
+    name: Соколова А. В.
+    roles: [to]
+  - id: kuznetsov
+    name: Кузнецов Д. С.
+    roles: [omts]
+  - id: sidorov
+    name: Сидоров С. С.
+    roles: [chief_designer, omts] # несколько ролей: прав больше

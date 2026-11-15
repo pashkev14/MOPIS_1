@@ -1,0 +1,72 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "update": "disable",
+  "share": "disabled",
+  "model": "routerai/deepseek/deepseek-v4.1-flash-1017",
+  "providers": {
+    "routerai": {
+      "name": "Router AI",
+      "env": ["ROUTERAI_API_KEY"],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://routerai.ru/api/v1"
+      },
+      "models": {
+        "deepseek/deepseek-v4.1-flash-1017": {
+          "name": "DeepSeek V4.1 Flash 1017",
+          "limit": {
+            "context": 1000000,
+            "output": 384000
+          },
+          "capabilities": {
+            "tools": true,
+            "input": ["text", "image"],
+            "output": ["text"]
+          }
+        }
+      }
+    }
+  },
+  // Жесткие политики уровня безопасности (не переопределяются локально)
+  "policies": [
+    { "action": "provider.use", "resource": "*", "effect": "deny" },
+    { "action": "provider.use", "resource": "routerai", "effect": "allow" },
+    { "action": "tool.use", "resource": "webfetch", "effect": "deny" },
+    { "action": "tool.use", "resource": "websearch", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:sudo *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:rm -rf *", "effect": "deny" },
+    { "action": "tool.use", "resource": "shell:git push *", "effect": "deny" }
+  ],
+  // Упорядоченные разрешения (последнее совпадение побеждает)
+  "permissions": [
+    // 1. Запрет выхода за пределы директории репозитория
+    { "action": "external_directory", "resource": "*", "effect": "deny" },
+
+    // 2. Защита секретов и системных файлов внутри проекта
+    { "action": "read", "resource": "*", "effect": "allow" },
+    { "action": "read", "resource": ".env*", "effect": "deny" },
+    { "action": "read", "resource": "**/.env*", "effect": "deny" },
+    { "action": "read", "resource": "**/*.key", "effect": "deny" },
+    { "action": "read", "resource": "**/*.pem", "effect": "deny" },
+
+    // 3. Редактирование файлов — только внутри проекта и не затрагивая конфиги безопасности
+    { "action": "edit", "resource": "*", "effect": "allow" },
+    { "action": "edit", "resource": ".env*", "effect": "deny" },
+    { "action": "edit", "resource": "opencode.jsonc", "effect": "deny" },
+    { "action": "edit", "resource": "pom.xml", "effect": "ask" },
+
+    // 4. Shell-команды (в OpenCode v2 используется action: "shell")
+    { "action": "shell", "resource": "*", "effect": "ask" },
+    { "action": "shell", "resource": "mvn *", "effect": "allow" },
+    { "action": "shell", "resource": "java *", "effect": "allow" },
+    { "action": "shell", "resource": "git status*", "effect": "allow" },
+    { "action": "shell", "resource": "git diff*", "effect": "allow" },
+    { "action": "shell", "resource": "git log*", "effect": "allow" },
+    { "action": "shell", "resource": "rm *", "effect": "deny" },
+    { "action": "shell", "resource": "del *", "effect": "deny" },
+    { "action": "shell", "resource": "rmdir *", "effect": "deny" },
+    { "action": "shell", "resource": "curl *", "effect": "deny" },
+    { "action": "shell", "resource": "wget *", "effect": "deny" },
+    { "action": "shell", "resource": "powershell *", "effect": "deny" }
+  ]
+}

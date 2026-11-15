@@ -1,0 +1,45 @@
+# Сценарий демонстрации: выполняется по порядку при запуске без аргументов.
+commands:
+  - {type: start,  user: ivanov,    object: cmp-1}
+  - {type: action, user: ivanov,    object: cmp-1, action: declare}
+  - {type: action, user: petrov,    object: cmp-1, action: submit}
+  - {type: action, user: ivanov,    object: cmp-1, action: submit}
+  - {type: action, user: petrov,    object: cmp-1, action: return_kb}
+  - {type: action, user: ivanov,    object: cmp-1, action: submit}
+  - {type: action, user: ivanov,    object: cmp-1, action: approve_kb}
+  - {type: action, user: petrov,    object: cmp-1, action: approve_kb}
+  - {type: action, user: sokolova,  object: cmp-1, action: approve_to}
+  - {type: action, user: kuznetsov, object: cmp-1, action: find_suppliers}
+  - {type: action, user: petrov,    object: cmp-1, action: allow}
+  - {type: action, user: sidorov,   object: cmp-1, action: allow}
+  - {type: action, user: sidorov,   object: cmp-1, action: confirm_allow}
+  - {type: action, user: sidorov,   object: cmp-1, action: forbid}
+  - {type: action, user: sidorov,   object: cmp-1, action: allow}
+
+  - {type: start,  user: ivanov,    object: cmp-heavy}
+  - {type: action, user: ivanov,    object: cmp-heavy, action: declare}
+  - {type: action, user: ivanov,    object: cmp-heavy, action: submit}
+
+  - {type: start,  user: ivanov,    object: cmp-undefined}
+  - {type: action, user: ivanov,    object: cmp-undefined, action: declare}
+
+  - {type: start,  user: ivanov,    object: cmp-custom}
+  - {type: action, user: ivanov,    object: cmp-custom, action: declare}
+  - {type: action, user: ivanov,    object: cmp-custom, action: submit}
+  - {type: action, user: petrov,    object: cmp-custom, action: approve_kb}
+  - {type: action, user: sokolova,  object: cmp-custom, action: approve_to}
+  - {type: action, user: kuznetsov, object: cmp-custom, action: no_production}
+  - {type: action, user: kuznetsov, object: cmp-custom, action: supplier_refused}
+  - {type: action, user: kuznetsov, object: cmp-custom, action: supplier_agreed}
+  - {type: action, user: sidorov,   object: cmp-custom, action: allow}
+  - {type: action, user: sidorov,   object: cmp-custom, action: confirm_allow}
+
+  - {type: start,  user: ivanov,    object: cmp-explicit-null}
+  - {type: action, user: ivanov,    object: cmp-explicit-null, action: declare}
+  - {type: action, user: ivanov,    object: cmp-explicit-null, action: submit}
+  - {type: action, user: petrov,    object: cmp-explicit-null, action: approve_kb}
+  - {type: action, user: sokolova,  object: cmp-explicit-null, action: approve_to}
+  - {type: action, user: kuznetsov, object: cmp-explicit-null, action: find_suppliers}
+
+  - {type: start,  user: ivanov,    object: itm-1}
+  - {type: start,  user: ivanov,    object: cmp-1}

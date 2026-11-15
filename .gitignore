@@ -1,16 +1,40 @@
-# OpenCode & AI
-.opencode/
-.env
-
-# Java
+# Java & Maven
 target/
-build/
-.gradle/
 *.class
 *.jar
+*.war
+*.ear
 
-# IDE & OS
+# Secrets & Local environment
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.jks
+secrets.yaml
+
+# OpenCode
+.opencode/cache/
+.opencode/state/
+.opencode/node_modules/
+.opencode/package.json
+.opencode/package-lock.json
+.opencode/bun.lock
+opencode.json
+
+# Temporary logs & dumps
+logs/*.jsonl
+!logs/demo_example.jsonl
+*.log
+*.hprof
+hs_err_pid*
+replay_pid*
+
+# IDE & OS files
 .idea/
-.vscode/
 *.iml
+.vscode/
 .DS_Store
+Thumbs.db

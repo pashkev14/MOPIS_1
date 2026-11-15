@@ -1,0 +1,161 @@
+process: component_catalog_entry
+title: Включение нового комплектующего в справочник
+class: component # шаблон привязан к ТОЧНОМУ классу; шаблоны не наследуются
+create_roles: [developer]
+
+actions:
+  - id: declare
+    title: Завершить объявление
+  - id: submit
+    title: Завершить редактирование и передать в КБ
+  - id: return_kb
+    title: Вернуть с замечаниями КБ
+  - id: approve_kb
+    title: Согласовать в КБ
+  - id: return_to
+    title: Вернуть с замечаниями ТО
+  - id: approve_to
+    title: Согласовать в ТО
+  - id: find_suppliers
+    title: Поставщики найдены
+  - id: no_production
+    title: Продукция не производится
+  - id: supplier_refused
+    title: Отказ поставщика
+  - id: supplier_agreed
+    title: Согласовано с поставщиком
+  - id: allow
+    title: Разрешить использование
+  - id: forbid
+    title: Запретить использование
+  - id: confirm_allow
+    title: Подтвердить разрешение
+  - id: confirm_forbid
+    title: Подтвердить запрещение
+
+# Ровно одно из полей parameter / class_id.
+predicates:
+  - id: designation_filled
+    parameter: designation
+    operator: filled
+  - id: mass_in_range
+    parameter: mass
+    operator: in_range
+  - id: mass_le_10
+    parameter: mass
+    operator: '<='
+    value: 10
+  - id: is_item # предикат класса: объект класса item или его подкласса
+    class_id: item
+  - id: produced
+    parameter: is_produced
+    operator: '='
+    value: "yes"
+  - id: supplier_approved
+    parameter: supplier_approved
+    operator: '='
+    value: "yes"
+  - id: tech_approved
+    parameter: tech_process_approved
+    operator: '='
+    value: "yes"
+  - id: has_suppliers
+    parameter: suppliers_count
+    operator: '>='
+    value: 1
+
+states:
+  - id: declared
+    title: Объявление нового комплектующего
+    initial: true
+    roles: [developer]
+  - id: editing
+    title: Редактирование параметров
+    roles: [developer]
+  - id: review_kb
+    title: Согласование в КБ
+    roles: [kb]
+  - id: review_to
+    title: Согласование в ТО
+    roles: [to]
+  - id: suppliers
+    title: Определение возможных поставщиков
+    roles: [omts]
+  - id: requirements
+    title: Выставление требований поставщику
+    roles: [omts]
+  - id: permission
+    title: Разрешение на использование
+    roles: [chief_designer]
+  - id: forbidden
+    title: Запрещено использовать
+    roles: [chief_designer]
+  - id: allowed
+    title: Разрешено использовать
+    roles: [chief_designer]
+
+# Условие: список дизъюнктов (ИЛИ), дизъюнкт — список предикатов (И), допускается "not <id>".
+transitions:
+  - from: declared
+    action: declare
+    to: editing
+    condition:
+      - [designation_filled, is_item] # И
+  - from: editing
+    action: submit
+    to: review_kb
+    condition:
+      - [designation_filled, mass_in_range]
+  - from: review_kb
+    action: return_kb
+    to: editing
+  - from: review_kb
+    action: approve_kb
+    to: review_to
+    condition:
+      - [designation_filled, mass_in_range]
+  - from: review_to
+    action: return_to
+    to: editing
+  - from: review_to
+    action: approve_to
+    to: suppliers
+    condition:
+      - [tech_approved] # ИЛИ
+      - [mass_le_10]
+  - from: suppliers
+    action: find_suppliers
+    to: permission
+    condition:
+      - [produced, has_suppliers]
+  - from: suppliers
+    action: no_production
+    to: requirements
+    condition:
+      - [not produced] # отрицание
+  - from: requirements
+    action: supplier_refused
+    to: requirements # переход в себя
+  - from: requirements
+    action: supplier_agreed
+    to: permission
+    condition:
+      - [supplier_approved]
+  - from: permission # (P И S) ИЛИ (НЕ P И A)
+    action: allow
+    to: allowed
+    condition:
+      - [produced, has_suppliers]
+      - [not produced, supplier_approved]
+  - from: permission # дополнение предыдущего условия по де Моргану
+    action: forbid
+    to: forbidden
+    condition:
+      - [not produced, not supplier_approved]
+      - [produced, not has_suppliers]
+  - from: allowed
+    action: confirm_allow
+    to: permission
+  - from: forbidden
+    action: confirm_forbid
+    to: permission

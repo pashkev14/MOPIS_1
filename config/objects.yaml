@@ -1,0 +1,47 @@
+objects:
+  - id: cmp-1
+    class: component
+    values:
+      designation: АБВГ.757412.001
+      mass: 0.35
+      is_produced: "yes"
+      suppliers_count: 3
+      tech_process_approved: "yes"
+      # supplier_approved не задан -> "no" по умолчанию
+
+  - id: cmp-custom
+    class: component
+    values:
+      designation: АБВГ.757412.002
+      mass: 12.5
+      is_produced: "no"
+      suppliers_count: 0
+      supplier_approved: "yes"
+      tech_process_approved: "yes"
+
+  - id: cmp-heavy # масса вне диапазона подкласса component (max 250), но в диапазоне item
+    class: component
+    values:
+      designation: АБВГ.757412.003
+      mass: 320
+      is_produced: "yes"
+      suppliers_count: 2
+      tech_process_approved: "yes"
+
+  - id: cmp-undefined # все значения по умолчанию; designation не задано
+    class: component
+
+  - id: cmp-explicit-null # явный null не заменяется значением по умолчанию
+    class: component
+    values:
+      designation: АБВГ.757412.004
+      mass: 5.0
+      is_produced: "yes"
+      suppliers_count: null
+      tech_process_approved: "yes"
+
+  - id: itm-1 # объект базового класса: шаблона для item нет
+    class: item
+    values:
+      designation: АБВГ.300000.001
+      mass: 25.0
